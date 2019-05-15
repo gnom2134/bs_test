@@ -27,7 +27,6 @@
     </div>
   </main>
     <script src="lib/ace/ace.js"></script>
-    <!--<script src="lib/acorn/acorn/dist/acorn.js"></script>-->
     <script type="text/javascript">
       function number_align(number) {
         switch (("" + number).length) {
@@ -118,16 +117,6 @@
         }
         console.log(low);
       }
-
-      /*function check(user_code) {
-        const ast = acorn.parse(user_code);
-        const body = ast.body;
-        const variable_declaration = body.filter((node) => node.type === 'VariableDeclaration')[0];
-        if (!(variable_declaration.id == "Identifier" && variable_declaration.id.name == "array"))
-          return false;
-        else
-          console.log('its okay');
-      }*/
 
       function check(user_code) {
         var arrays_pool = [[1, 2, 3, 4, 5], [-9, 0, 9, 10, 111, 178], [-14, -12, -10, -4, 56, 999], [100, 100, 100, 100, 100, 100, 100, 100], [100, 100, 100, 100, 100, 100, 100, 100]];
