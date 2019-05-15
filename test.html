@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Web-project</title>
+    <style>
+      .small { font: italic 13px sans-serif; }
+      .heavy { font: bold 30px sans-serif; }
+    </style>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div style="width:100%; height:auto;">
+    <div style="width:50%; height:auto; float:left;">
+      <svg id="nice_svg" style="float:left; width:100%; height:100px;">
+      </svg>
+      <span id="text_field" style="float:left; width:100%; height:100px;">
+      </span>
+    </div>
+    <svg id="user_svg" style="float:right; width:50%; height:100px;">
+    </svg>
+  </div>
+  <main class="demo" style="width:100%;">
+    <div class="demo__item item editor-container" style="width=100%; float:left;">
+      <button id="check_btn" class="item__title">Test me!</button>
+      <div class="item__inner js-editor" id="editor"></div>
+    </div>
+  </main>
+    <script src="lib/ace/ace.js"></script>
+    <!--<script src="lib/acorn/acorn/dist/acorn.js"></script>-->
+    <script type="text/javascript">
+      function number_align(number) {
+        switch (("" + number).length) {
+          case 1:
+            return 0;
+          case 2:
+            return -7;
+          case 3:
+            return -14;
+          default:
+            return 0;
+        }
+      }
+
+      function draw_my_array(step_number, array, selected_from, selected_to, selected_elem) {
+        var svg_element = document.getElementById('user_svg');
+        step_number--; selected_from--; selected_to--; selected_elem--;
+        var coordinate_x = 5;
+        var coordinate_y = 10 + 60 * step_number + 10 * step_number;
+        for (var i = 0; i < array.length; i++) {
+          var content = '<rect x=\"' + coordinate_x + '\" y=\"' + coordinate_y +
+            '\" width=\"60\" height=\"60\" ';
+          if (i >= selected_from && i <= selected_to) {
+            if (i == selected_elem) {
+              content += 'fill=\"blue\"';
+            } else {
+              content += 'fill=\"orange\"';
+            }
+          } else {
+            content += 'fill=\"yellow\"';
+          }
+          content += ' stroke=\"black\" stroke-width=\"5\"/>' +
+            '<text x=\"' + (coordinate_x + 20 + number_align(array[i])) + '\"y=\"' + (coordinate_y + 40)  + '\" class=\"heavy\">' +
+            array[i] + '</text>';
+          coordinate_x += 60;
+          svg_element.innerHTML += content;
+        }
+
+        if (parseInt(svg_element.style.height.slice(0, -2), 10) < coordinate_y + 70) {
+          svg_element.style.height = coordinate_y + 70;
+        }
+      }
+
+      function draw_array(svg_element, step_number, array, selected_from, selected_to, selected_elem) {
+        step_number--; selected_from--; selected_to--; selected_elem--;
+        var coordinate_x = 5;
+        var coordinate_y = 10 + 60 * step_number + 10 * step_number;
+        for (var i = 0; i < array.length; i++) {
+          var content = '<rect x=\"' + coordinate_x + '\" y=\"' + coordinate_y +
+            '\" width=\"60\" height=\"60\" ';
+          if (i >= selected_from && i <= selected_to) {
+            if (i == selected_elem) {
+              content += 'fill=\"blue\"';
+            } else {
+              content += 'fill=\"orange\"';
+            }
+          } else {
+            content += 'fill=\"yellow\"';
+          }
+          content += ' stroke=\"black\" stroke-width=\"5\"/>' +
+            '<text x=\"' + (coordinate_x + 20 + number_align(array[i])) + '\"y=\"' + (coordinate_y + 40)  + '\" class=\"heavy\">' +
+            array[i] + '</text>';
+          coordinate_x += 60;
+          svg_element.innerHTML += content;
+        }
+
+        if (parseInt(svg_element.style.height.slice(0, -2), 10) < coordinate_y + 70) {
+          svg_element.style.height = coordinate_y + 70;
+        }
+      }
+
+      function binary_search_draw(svg_draw, array, search_value) {
+        svg_draw.innerHTML = "";
+        var low = 0;
+        var high = array.length - 1;
+        var counter = 1;
+        while (low <= high) {
+          var mid = low + Math.floor((high - low) / 2);
+          draw_array(svg_draw, counter++, array, low + 1, high + 1, mid + 1);
+          if (search_value == array[mid]) {
+            console.log(mid + 1);
+            break;
+          }
+          else if (search_value < array[mid])
+            high = mid - 1;
+          else
+            low = mid + 1;
+        }
+        console.log(low);
+      }
+
+      /*function check(user_code) {
+        const ast = acorn.parse(user_code);
+        const body = ast.body;
+        const variable_declaration = body.filter((node) => node.type === 'VariableDeclaration')[0];
+        if (!(variable_declaration.id == "Identifier" && variable_declaration.id.name == "array"))
+          return false;
+        else
+          console.log('its okay');
+      }*/
+
+      function check(user_code) {
+        var arrays_pool = [[1, 2, 3, 4, 5], [-9, 0, 9, 10, 111, 178], [-14, -12, -10, -4, 56, 999], [100, 100, 100, 100, 100, 100, 100, 100], [100, 100, 100, 100, 100, 100, 100, 100]];
+        var keys_pool = [2, 111, 55, 100, 1000];
+        var pos_of_array = user_code.indexOf('array');
+        if (pos_of_array < 0)
+          return false;
+        var sum_after_array = 0;
+        for (var i = pos_of_array; user_code[i] !== ';'; i++)
+          sum_after_array++;
+        for (var i = 0; i < arrays_pool.length; i++) {
+          document.getElementById('user_svg').innerHTML = "";
+          var temp_text = user_code.replace(user_code.substr(pos_of_array, sum_after_array), 'array = [' + arrays_pool[i] + ']');
+          var pos_of_key = temp_text.indexOf('key');
+          if (pos_of_key < 0)
+            return false;
+          var sum_after_key = 0;
+          for (var j = pos_of_key; temp_text[j] != ';'; j++)
+            sum_after_key++;
+          temp_text = temp_text.replace(temp_text.substr(pos_of_key, sum_after_key), 'key = ' + keys_pool[i]);
+          console.log(temp_text);
+          eval(temp_text);
+          binary_search_draw(document.getElementById('nice_svg'), arrays_pool[i], keys_pool[i]);
+          if (document.getElementById('user_svg').innerHTML != document.getElementById('nice_svg').innerHTML) {
+            return false;
+          }
+        }
+        return true;
+      }
+
+      alert('Write your own interpretation of binary search. Use current array and key as the example.');
+
+      const editor = ace.edit(document.getElementById('editor'));
+      editor.session.setMode("ace/mode/javascript");
+      editor.session.setTabSize(2);
+      editor.setValue('var array = [0, 15, 24, 39, 197];\nvar key = 39;');
+      editor.clearSelection();
+
+      var svg_draw = document.getElementById('nice_svg');
+      var svg_draw_user = document.getElementById('user_svg');
+      svg_draw.innerHTML = "";
+
+      var arr = [0, 15, 24, 39, 197];
+
+      binary_search_draw(svg_draw, arr, 39);
+
+      const makeChanges = () => {
+        svg_draw_user.innerHTML = "";
+        binary_search_draw(svg_draw, arr, 39);
+        eval(editor.getValue());
+
+        if (document.getElementById('user_svg').innerHTML == document.getElementById('nice_svg').innerHTML) {
+          document.getElementById('text_field').innerHTML = 'Great. Try tests now.';
+        } else {
+          document.getElementById('text_field').innerHTML = 'Oops. Your code is seem to fail.';
+        }
+      };
+      makeChanges();
+
+      let interval = null;
+      const onChange = () => {
+        clearInterval(interval);
+        interval = setTimeout(() => {
+          makeChanges();
+        }, 1000);
+      }
+
+      document.getElementById("check_btn").addEventListener("click", function() {
+        if(check(editor.getValue())) {
+          document.getElementById('text_field').innerHTML = 'Great. You just passed your final exam.';
+        } else {
+          document.getElementById('text_field').innerHTML = 'Oops. Something gone wrong.';
+        }
+      });
+      editor.getSession().on('change', onChange);
+
+/*var array = [1, 15, 17, 39, 197];
+var key = 15;
+
+var low = 0;
+var high = array.length - 1;
+var counter = 1;
+while (low <= high) {
+  var mid = low + Math.floor((high - low) / 2);
+  draw_my_array(counter++, array, low + 1, high + 1, mid + 1);
+  if (key == array[mid]) {
+    console.log(mid + 1);
+    break;
+  }
+  else if (key < array[mid])
+    high = mid - 1;
+  else
+    low = mid + 1;
+}
+console.log(low);*/
+    </script>
+</body>
