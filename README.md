@@ -1,7 +1,7 @@
 # Binary search test
 
 <p>Напишите собственную интерпретацию бинарного поиска на JavaScript</p>
-<p>Используйте функцию <strong>graw_my_array(i, array, from, to, selected)</strong> для отрисовки массива в окошке слева</p>
+<p>Используйте функцию <strong>draw_my_array(i, array, from, to, selected)</strong> для отрисовки массива в окошке слева</p>
 <ul>
 <li><strong>i</strong> - номер шага.</li>
 <li><strong>array</strong> - сам массив</li>
