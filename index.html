@@ -158,12 +158,12 @@
         return true;
       }
 
-      alert('Write your own interpretation of binary search. Use current array and key as the example.');
-
+      alert('Write your own interpretation of binary search. Use current array and key as the example. Use function draw_my_array(step, array, from, to, mid) to visualize your steps. Whenever you ready push \"Test me!\" button to run tests.');
+      
       const editor = ace.edit(document.getElementById('editor'));
       editor.session.setMode("ace/mode/javascript");
       editor.session.setTabSize(2);
-      editor.setValue('var array = [0, 15, 24, 39, 197];\nvar key = 39;');
+      editor.setValue('var array = [0, 15, 24, 39, 197];\nvar key = 39;\ndraw_my_array(1, array, 1, 3, 2);');
       editor.clearSelection();
 
       var svg_draw = document.getElementById('nice_svg');
