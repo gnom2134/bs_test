@@ -26,7 +26,7 @@
       <div class="item__inner js-editor" id="editor"></div>
     </div>
   </main>
-    <script src="lib/ace/ace.js"></script>
+    <script src="node_modules/brace/index.js"></script>
     <!--<script src="lib/acorn/acorn/dist/acorn.js"></script>-->
     <script type="text/javascript">
       function number_align(number) {
@@ -159,7 +159,7 @@
       }
 
       alert('Write your own interpretation of binary search. Use current array and key as the example. Use function draw_my_array(step, array, from, to, mid) to visualize your steps. Whenever you ready push \"Test me!\" button to run tests.');
-      
+
       const editor = ace.edit(document.getElementById('editor'));
       editor.session.setMode("ace/mode/javascript");
       editor.session.setTabSize(2);

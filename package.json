@@ -1,0 +1,9 @@
+{
+  "name": "@gnom2134/bs_test",
+  "version": "1.0.0",
+  "description": "",
+  "dependencies": {
+    "ace": "git+https://github.com/ajaxorg/ace.git",
+    "brace": "^0.11.1",
+  }
+}
